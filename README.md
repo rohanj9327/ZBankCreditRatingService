@@ -13,3 +13,10 @@ public record RatingResultDto(
     String applicationId,
     String failureReason
 ) {}
+
+
+@KafkaListener(
+            id = "zbank-customer-rating-result-consumer",
+            topics = "customer-rating-results",
+            groupId = "${zbank.kafka.consumer.rating-result.group-id}"
+    )
