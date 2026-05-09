@@ -1,78 +1,45 @@
 package com.zbank.creditscore.service;
 
 import com.zbank.creditscore.dto.ApplicantRequestDto;
+import com.zbank.creditscore.repository.CreditDecisionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class CreditScoreService {
 
-    public CreditDecision calculate(
-            ApplicantRequestDto dto
-    ) {
+    private final CreditDecisionRepository repository;
 
-        Integer existingCards =
-                dto.getExistingCreditCards();
+    public CreditDecision calculate(ApplicantRequestDto dto) {
+        Integer existingCards = dto.getExistingCreditCards();
+        BigDecimal salary = dto.getAnnualSalary();
 
-        BigDecimal salary =
-                dto.getAnnualSalary();
+        if(existingCards >= 3 && salary.compareTo(BigDecimal.valueOf(700000)) > 0) {
+            CreditDecision decision = new CreditDecision(800, "PASSED", "PLATINUM", null);
 
-        /*
-            HIGH PROFILE
-         */
-        if(existingCards >= 3 &&
-                salary.compareTo(
-                        BigDecimal.valueOf(700000)
-                ) > 0) {
-
-            return new CreditDecision(
-                    800,
-                    "PASSED",
-                    "PLATINUM",
-                    null
-            );
+            repository.save(decision);
+            return decision;
         }
 
-        /*
-            MID PROFILE
-         */
-        if(existingCards >= 1 &&
-                salary.compareTo(
-                        BigDecimal.valueOf(300000)
-                ) > 0) {
+        if(existingCards >= 1 && salary.compareTo(BigDecimal.valueOf(300000)) > 0) {
+            CreditDecision decision = new CreditDecision(650, "PASSED", "GOLD", null);
 
-            return new CreditDecision(
-                    650,
-                    "PASSED",
-                    "GOLD",
-                    null
-            );
+            repository.save(decision);
+            return decision;
         }
 
-        /*
-            BASIC PROFILE
-         */
-        if(salary.compareTo(
-                BigDecimal.valueOf(100000)
-        ) > 0) {
+        if(salary.compareTo(BigDecimal.valueOf(100000)) > 0) {
+            CreditDecision decision = new CreditDecision(500, "PASSED", "VISA", null);
 
-            return new CreditDecision(
-                    500,
-                    "PASSED",
-                    "VISA",
-                    null
-            );
+            repository.save(decision);
+            return decision;
         }
 
-        /*
-            FAILED
-         */
-        return new CreditDecision(
-                300,
-                "FAILED",
-                null,
-                "Credit policy validation failed"
-        );
+        CreditDecision decision =  new CreditDecision(300, "FAILED", null, "Credit policy validation failed");
+        repository.save(decision);
+        return decision;
     }
 }

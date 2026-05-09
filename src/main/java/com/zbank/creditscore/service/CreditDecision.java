@@ -1,13 +1,34 @@
 package com.zbank.creditscore.service;
 
-public record CreditDecision(
+import jakarta.persistence.*;
+import lombok.*;
 
-        Integer score,
+@Entity
+@Table(name = "credit_decisions")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class CreditDecision {
 
-        String status,
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        String cardType,
+    private Integer score;
 
-        String failureReason
-) {
+    private String status;
+
+    private String cardType;
+
+    private String failureReason;
+
+    // Manual constructor to match your Service's "new CreditDecision(...)" calls
+    public CreditDecision(Integer score, String status, String cardType, String failureReason) {
+        this.score = score;
+        this.status = status;
+        this.cardType = cardType;
+        this.failureReason = failureReason;
+    }
 }

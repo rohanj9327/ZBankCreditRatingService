@@ -53,36 +53,18 @@ public class CustomerApplicationEventConsumer {
             /*
                 Score Calculation
              */
-            CreditDecision decision =
-                    scoreService.calculate(dto);
+            CreditDecision decision = scoreService.calculate(dto);
 
             /*
-                Build Result
+                Build Result - Notice the change from .status() to .getStatus()
              */
-            RatingResultDto result =
-                    RatingResultDto.builder()
-
-                            .status(
-                                    decision.status()
-                            )
-
-                            .score(
-                                    decision.score()
-                            )
-
-                            .cardType(
-                                    decision.cardType()
-                            )
-
-                            .applicationId(
-                                    event.applicationId()
-                            )
-
-                            .failureReason(
-                                    decision.failureReason()
-                            )
-
-                            .build();
+            RatingResultDto result = RatingResultDto.builder()
+                    .status(decision.getStatus())       // Updated
+                    .score(decision.getScore())         // Updated
+                    .cardType(decision.getCardType())   // Updated
+                    .applicationId(event.applicationId())
+                    .failureReason(decision.getFailureReason()) // Updated
+                    .build();
 
             /*
                 Publish Result

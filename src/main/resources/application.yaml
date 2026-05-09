@@ -48,6 +48,8 @@ zbank:
     consumer:
       customer-application:
         group-id: zbank-credit-score-group
+      rating-result:
+        group-id: zbank-credit-card-rating-group
 
 logging:
   level:
